@@ -3,7 +3,7 @@
 #include <conio.h>
 #include <string.h>
 #include <time.h>
-typedef struct BinarySearchTree BST;
+typedef struct Reservation tkt;
 // if tkt is empty then we have to handle the error
 struct Reservation
 {
@@ -71,7 +71,7 @@ tkt *insert(tkt **r, int custId)
     (*r)->PassnNo = custId;
     if (*r == NULL)
     {
-      printf("No memory…");
+      printf("No memoryâ€¦");
       return NULL;
     }
     else
