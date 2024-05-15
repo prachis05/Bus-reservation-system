@@ -71,7 +71,7 @@ BST *insert(BST **r, int custId)
     (*r)->PassnNo = custId;
     if (*r == NULL)
     {
-      printf("No memory…");
+      printf("No memoryâ€¦");
       return NULL;
     }
     else
@@ -204,7 +204,7 @@ void busLists()
   printf("\n2\tMSRTC Travels     \tMumbai To Pune       \tRs.55    \t\t01:30  PM");
   printf("\n3\tShiv Ganga Travels   \tMumbai To Goa\tRs.40    \t\t03:50  PM");
   printf("\n4\tSuper Deluxe         \tPune To Aurangabad    \tRs.70    \t\t01:00  AM");
-  printf("\n5\tSai Baba Travels     \tMumbai To Nashik \tRs.55    \t\t12:05  AM");
+  printf("\n5\tSai  Travels     \tMumbai To Nashik \tRs.55    \t\t12:05  AM");
   printf("\n6\tShine On Travels     \tPune to Nagpur    \tRs.40    \t\t09:30  AM");
   printf("\n7\tMayur Travels        \tPatna To Gaya         \tRs.70   \t\t11:00  PM");
   printf("\n8\tSai Travels       \tPune To Kolhapur     \tRs.55    \t\t08:15  AM");
