@@ -1,0 +1,9 @@
+1,GangaTravels,Pune to Mumbai,70,07:00 AM
+2,MSRTC Travels,Mumbai to Pune,55,01:30 PM
+3,Shiv Ganga Travels,Mumbai to Goa,40,03:50 PM
+4,Super Deluxe,Pune to Aurangabad,70,01:00 AM
+5,Sai Baba Travels,Mumbai to Nashik,55,12:05 AM
+6,Shine On Travels,Pune to Nagpur,40,09:30 AM
+7,Mayur Travels,Pune to Amravati,70,11:00 PM
+8,Sai Travels,Pune to Kolhapur,55,08:15 AM
+9,Shree Travels,Mumbai to Solapur,40,04:00 PM
