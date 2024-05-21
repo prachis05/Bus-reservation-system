@@ -20,8 +20,13 @@ void reservationInfo(int custID);     // Display Reservation Info
 void insert(int custID);              // inserting a reservation
 void loadReservations();              // load reservations from file
 void saveReservations();              // save reservations to file
+void loadBusData();                   // load bus data from file
+void loadUserCredentials();           // load user credentials from file
+void login();                         // login function
 
 int busSeat[32][33] = {0};
+char busDataFile[] = "busData.txt";
+char userCredentialsFile[] = "userCredentials.txt";
 
 void redColor() // Print the message in red color
 {
@@ -31,6 +36,76 @@ void redColor() // Print the message in red color
 void resetColor() // reset the old color of console
 {
     printf("\033[0m");
+}
+
+void loadUserCredentials()
+{
+    FILE *file = fopen(userCredentialsFile, "r");
+    if (file == NULL) {
+        perror("Error opening user credentials file");
+        exit(EXIT_FAILURE);
+    }
+
+    char username[20];
+    char password[10];
+    fscanf(file, "%s %s", username, password);
+
+    fclose(file);
+}
+
+void loadBusData()
+{
+    FILE *file = fopen(busDataFile, "r");
+    if (file == NULL) {
+        perror("Error opening bus data file");
+        exit(EXIT_FAILURE);
+    }
+
+    char line[100];
+    while (fgets(line, sizeof(line), file)) {
+            int busNo,charges;
+            char busName[20],destination[30],time[30];
+            sscanf(line, "%d,%19[^,],%29[^,],%d,%9[^\n]", &busNo,busName,destination,&charges,time);
+        // Parse bus data from the file
+        // This function will be specific to how your bus data is structured
+        // Assuming the data is stored in some global structure or array
+    }
+
+    fclose(file);
+}
+
+void login()
+{
+    char userName[20] = "user";
+    char passWord[10] = "psap";
+    char matchPass[10];
+    char matchUser[20];
+    int value;
+
+    redColor();
+    printf("\n\n=========================================================================================\n");
+    printf("\n\t\t\tWELCOME TO ONLINE BUS RESERVATION");
+    printf("\n\n=========================================================================================\n\n");
+    resetColor();
+
+login:
+    printf("\n\nUserName: ");
+    fgets(matchUser, 20, stdin);
+    matchUser[strcspn(matchUser, "\n")] = 0; // remove newline
+
+    printf("\nPassWord: ");
+    fgets(matchPass, 10, stdin);
+    matchPass[strcspn(matchPass, "\n")] = 0; // remove newline
+
+    value = strcmp(passWord, matchPass);
+    if (value != 0) {
+        redColor();
+        printf("\nINVALID DETAILS TRY AGAIN...\n");
+        resetColor();
+        goto login;
+    } else {
+        printf("\nLOGGED IN SUCCESSFULLY...\n");
+    }
 }
 
 void reservationInfo(int custID) // find function
@@ -128,40 +203,6 @@ void DisplaySeat(int bus[33])
     }
 }
 
-void login()
-{
-    char userName[20] = "user";
-    char passWord[10] = "psap";
-    char matchPass[10];
-    char matchUser[20];
-    int value;
-
-    redColor();
-    printf("\n\n=========================================================================================\n");
-    printf("\n\t\t\tWELCOME TO ONLINE BUS RESERVATION");
-    printf("\n\n=========================================================================================\n\n");
-    resetColor();
-
-login:
-    printf("\n\nUserName: ");
-    fgets(matchUser, 20, stdin);
-    matchUser[strcspn(matchUser, "\n")] = 0; // remove newline
-
-    printf("\nPassWord: ");
-    fgets(matchPass, 10, stdin);
-    matchPass[strcspn(matchPass, "\n")] = 0; // remove newline
-
-    value = strcmp(passWord, matchPass);
-    if (value != 0) {
-        redColor();
-        printf("\nINVALID DETAILS TRY AGAIN...\n");
-        resetColor();
-        goto login;
-    } else {
-        printf("\nLOGGED IN SUCCESSFULLY...\n");
-    }
-}
-
 int cost(int PassnNo)
 {
     int buscost = PassnNo / 1000;
@@ -198,26 +239,30 @@ busInput:
 
 void busLists()
 {
+    FILE *file = fopen(busDataFile, "r");
+    if (file == NULL) {
+        perror("Error opening bus data file");
+        exit(EXIT_FAILURE);
+    }
+
+    char line[100];
     redColor();
     printf("-----------------------------------------------------------------------------------------");
-    printf("\nBus.No\tName                \tDestinations          \tCharges\t\tTime\n");
+    printf("\nBus.No\tName                \tDestinations          \tCharges\t   \t\tTime\n");
     printf("-----------------------------------------------------------------------------------------");
     resetColor();
-    printf("\n1\t%-20s\t%-20s\tRs.%-6d\t\t%-8s", "GangaTravels", "Pune to Mumbai", 70, "07:00 AM");
-    printf("\n2\t%-20s\t%-20s\tRs.%-6d\t\t%-8s", "MSRTC Travels", "Mumbai To Pune", 55, "01:30 PM");
-    printf("\n3\t%-20s\t%-20s\tRs.%-6d\t\t%-8s", "Shiv Ganga Travels", "Pune To Amravati", 40, "03:50 PM");
-    printf("\n4\t%-20s\t%-20s\tRs.%-6d\t\t%-8s", "Super Deluxe", "Pune To Aurangabad", 70, "01:00 AM");
-    printf("\n5\t%-20s\t%-20s\tRs.%-6d\t\t%-8s", "Sai Baba Travels", "Mumbai To Nashik", 55, "12:05 AM");
-    printf("\n6\t%-20s\t%-20s\tRs.%-6d\t\t%-8s", "Shine On Travels", "Pune to Nagpur", 40, "09:30 AM");
-    printf("\n7\t%-20s\t%-20s\tRs.%-6d\t\t%-8s", "Mayur Travels", "Pune To Amravati", 70, "11:00 PM");
-    printf("\n8\t%-20s\t%-20s\tRs.%-6d\t\t%-8s", "Sai Travels", "Pune To Kolhapur", 55, "08:15 AM");
-    printf("\n9\t%-20s\t%-20s\tRs.%-6d\t\t%-8s", "Shree Travels", "Mumbai To Solapur", 40, "04:00 PM");
+    while (fgets(line, sizeof(line), file)) {
+        char busName[40], destination[40], time[40];
+        int busNo, charges;
+        sscanf(line, "%d,%19[^,],%29[^,],%d,%9[^\n]" , &busNo, busName, destination, &charges, time);
+        printf("\n%d\t%-20s\t%-20s\tRs.%-6d\t\t%-8s\n", busNo, busName, destination, charges, time);
+    }
+    fclose(file);
     printf("\n");
     printf("\n   PRESS 'ENTER' KEY TO CONTINUE ");
     getchar();
     getchar();
 }
-
 
 void cancel(int custID)
 {
@@ -243,67 +288,50 @@ void cancel(int custID)
                 scanf("%d", &seatNumber);
 
                 busSeat[choice][seatNumber] = 0;
+                printf("\n\n   SEAT CANCELLED SUCCESSFULLY!!\n");
             }
-            printf("\n\nYOUR RESERVATION HAS BEEN CANCELLED !!\n\n");
-            printf("\n  PRESS 'ENTER' KEY TO CONTINUE \n");
-            getchar(); // consume newline
-            getchar();
-            DisplaySeat(busSeat[choice]);
-            // Remove the reservation from the array
-            for (int i = 0; i < reservationCount; i++) {
-                if (reservations[i].PassnNo == custID) {
-                    for (int j = i; j < reservationCount - 1; j++) {
-                        reservations[j] = reservations[j + 1];
-                    }
-                    reservationCount--;
-                    saveReservations(); // Save to file after cancellation
-                    break;
-                }
-            }
-        } else if (c == 'n' || c == 'N') {
-            printf("\nYOUR RESERVATION CANCELLATION HAS BEEN DENIED\n");
+        } else {
+            printf("\n\nPLEASE ENTER THE CORRECT RESERVATION NUMBER.\n");
         }
-    } else {
-        printf("\nNOT FOUND!! ENTER THE CORRECT RESERVATION NUMBER\n");
     }
+}
+
+void saveReservations()
+{
+    FILE *file = fopen("reservations.txt", "w");
+    if (file == NULL) {
+        perror("Error opening reservations file");
+        exit(EXIT_FAILURE);
+    }
+
+    for (int i = 0; i < reservationCount; i++) {
+        fprintf(file, "%d %s\n", reservations[i].PassnNo, reservations[i].name);
+    }
+
+    fclose(file);
 }
 
 void loadReservations()
 {
     FILE *file = fopen("reservations.txt", "r");
     if (file == NULL) {
-        return; // No existing reservations
+        perror("Error opening reservations file");
+        exit(EXIT_FAILURE);
     }
+
+    reservationCount = 0;
     while (fscanf(file, "%d %s", &reservations[reservationCount].PassnNo, reservations[reservationCount].name) != EOF) {
         reservationCount++;
     }
+
     fclose(file);
 }
-
-void saveReservations()
-{
-    FILE *file = fopen("reservations.txt", "w");
-    for (int i = 0; i < reservationCount; i++) {
-        fprintf(file, "%d %s\n", reservations[i].PassnNo, reservations[i].name);
-    }
-    fclose(file);
-}
-
-void clearPreviousBookings() {
-    char clearChoice;
-    printf("\n\n   DO YOU WANT TO CLEAR PREVIOUS BOOKINGS? (y/n): ");
-    scanf(" %c", &clearChoice);
-    if (clearChoice == 'y' || clearChoice == 'Y') {
-        reservationCount = 0;
-        saveReservations();
-        printf("\n\n   PREVIOUS BOOKINGS CLEARED!\n");
-    }
-}
-
 
 int main()
 {
     int num, i, custID, reservationNo;
+    loadUserCredentials();
+    loadBusData();
     loadReservations();
     login();
 
@@ -332,7 +360,6 @@ int main()
                 break;
             case 2:
                 busLists();
-                clearPreviousBookings(); // Call the new function here
                 printf("\n\n   ENTER THE BUS NUMBER: ");
                 scanf("%d", &custID);
                 if (custID <= 0 || custID >= 10) {
@@ -353,21 +380,21 @@ int main()
                 printf("\n\nYOUR RESERVATION DONE SUCCESSFULLY!!\n");
                 break;
             case 3:
-                printf("   ENTER YOUR RESERVATION NUMBER: ");
+                printf("ENTER YOUR RESERVATION NUMBER: ");
                 scanf("%d", &custID);
-                cancel(custID); // for cancelling the seats
+                cancel(custID);
                 break;
             case 4:
-                status(); // for bus status if booked or not
+                status();
                 break;
             case 5:
                 printf("   ENTER YOUR RESERVATION NUMBER: ");
                 scanf("%d", &custID);
-                reservationInfo(custID); // for printing customer details
+                reservationInfo(custID);
                 break;
             case 6:
-                saveReservations(); // Save reservations to file before exiting
-                exit(0); // for exiting from the program
+                saveReservations();
+                exit(0);
                 break;
             default:
                 printf("\n  ENTER THE CORRECT OPTION: ");
