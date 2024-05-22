@@ -11,7 +11,7 @@ typedef struct Reservation {
 tkt reservations[100]; // Array to store reservations
 int reservationCount = 0; // Count of reservations
 
-int cost(int PassnNo);                // calculates costs
+int cost(int PassnNo);                //calculates costs
 void status();                        // shows bus and seats status
 void busLists();                      // shows buslist and do booking seat and return customer ID
 void DisplaySeat(int bus[33]);        // Display the seats of buses
@@ -25,6 +25,8 @@ void loadUserCredentials();           // load user credentials from file
 void login();                         // login function
 
 int busSeat[32][33] = {0};
+char userName[20];
+char passWord[10];
 char busDataFile[] = "busData.txt";
 char userCredentialsFile[] = "userCredentials.txt";
 
@@ -46,9 +48,8 @@ void loadUserCredentials()
         exit(EXIT_FAILURE);
     }
 
-    char username[20];
-    char password[10];
-    fscanf(file, "%s %s", username, password);
+
+    fscanf(file, "%s %s", userName, passWord);
 
     fclose(file);
 }
@@ -66,9 +67,7 @@ void loadBusData()
             int busNo,charges;
             char busName[20],destination[30],time[30];
             sscanf(line, "%d,%19[^,],%29[^,],%d,%9[^\n]", &busNo,busName,destination,&charges,time);
-        // Parse bus data from the file
-        // This function will be specific to how your bus data is structured
-        // Assuming the data is stored in some global structure or array
+
     }
 
     fclose(file);
@@ -76,8 +75,7 @@ void loadBusData()
 
 void login()
 {
-    char userName[20] = "user";
-    char passWord[10] = "psap";
+
     char matchPass[10];
     char matchUser[20];
     int value;
@@ -98,7 +96,7 @@ login:
     matchPass[strcspn(matchPass, "\n")] = 0; // remove newline
 
     value = strcmp(passWord, matchPass);
-    if (value != 0) {
+    if (value != 0 || strcmp(userName, matchUser)!= 0) {
         redColor();
         printf("\nINVALID DETAILS TRY AGAIN...\n");
         resetColor();
